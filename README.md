@@ -102,7 +102,7 @@ All routes were tested using **ThunderClient**:
 
 ---
 
-## 📷 Screenshots
+##  Screenshots
 - Check out the Screenshots folder in the repo or the Test Results PDF
 
 ---
