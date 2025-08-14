@@ -6,7 +6,8 @@ const cartItemSchema = new mongoose.Schema({
   quantity: { type: Number, required: true, min: 1, default: 1 }
 }, { timestamps: true });
 
-// Prevent duplicate items for same (user, product)
+// Preventing duplicate items for same user, product
+
 cartItemSchema.index({ userId: 1, productId: 1 }, { unique: true });
 
 module.exports = mongoose.model("CartItem", cartItemSchema);

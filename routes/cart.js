@@ -7,17 +7,20 @@ const CartItem = require("../models/CartItem");
 const router = express.Router();
 router.use(auth);
 
-// helper to resolve :id as cartItemId (preferred) or productId (fallback)
+// helper for resolving :id as cartItemId (preferred) or productId (fallback)
+
 async function resolveCartItem(userId, id) {
   if (!mongoose.isValidObjectId(id)) return null;
   let item = await CartItem.findOne({ _id: id, userId });
   if (item) return item;
   // fallback: treat id as productId
+
   item = await CartItem.findOne({ userId, productId: id });
   return item;
 }
 
-// GET /cart  (not required by brief, but super helpful to test)
+// GET /cart  (not required by brief but helpful to test)
+
 router.get("/", async (req, res) => {
   try {
     const items = await CartItem.find({ userId: req.user.id })
@@ -29,6 +32,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST /cart  { productId, quantity?=1 }
+
 router.post("/", async (req, res) => {
   try {
     const { productId, quantity = 1 } = req.body || {};
@@ -39,6 +43,7 @@ router.post("/", async (req, res) => {
     if (!product) return res.status(404).json({ error: "Product not found" });
 
     // upsert + stock check (limit to stockQuantity)
+
     const existing = await CartItem.findOne({ userId: req.user.id, productId });
     const newQty = (existing?.quantity || 0) + quantity;
 
@@ -59,6 +64,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /cart/:id  { quantity }
+
 router.put("/:id", async (req, res) => {
   try {
     let { id } = req.params;
@@ -88,6 +94,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /cart/:id
+
 router.delete("/:id", async (req, res) => {
   try {
     const item = await resolveCartItem(req.user.id, req.params.id);

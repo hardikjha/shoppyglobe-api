@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Database
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => {
@@ -18,13 +19,15 @@ mongoose.connect(process.env.MONGO_URI)
   });
 
 // Routes
+
 app.get("/", (req, res) => res.send("ShoppyGlobe API running"));
 
 app.use("/products", require("./routes/products"));
 app.use("/auth", require("./routes/auth"));
 app.use("/cart", require("./routes/cart"));
 
-// Central error handler (useful for unexpected errors)
+// Central error handling useful for unexpected errors
+
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
   res.status(err.status || 500).json({ error: err.message || "Server error" });
